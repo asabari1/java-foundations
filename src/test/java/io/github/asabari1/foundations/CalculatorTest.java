@@ -1,4 +1,4 @@
-package com.asabari1;
+package io.github.asabari1.foundations;
 
 import org.junit.jupiter.api.Test;
 
