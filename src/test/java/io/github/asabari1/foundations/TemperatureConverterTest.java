@@ -1,45 +1,63 @@
 package io.github.asabari1.foundations;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class TemperatureConverterTest {
-    private final TemperatureConverter temperatureConverter = new TemperatureConverter();
-    @ParameterizedTest
-    @CsvSource
-            ({
-                    "0,32",
-                    "100,212",
-                    "-40,-40"
-            })
-    void testCelsiusToFahrenheitScenarios(double input,double expectedOutput) {
-        double actualOutput = temperatureConverter.celsiusToFahrenheit(input);
-        assertEquals(expectedOutput,actualOutput,0.0001);
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
+
+class TemperatureConverterTest {
+
+    private static final double DELTA = 1e-9;
+
+    @ParameterizedTest(name = "{0} C = {1} F")
+    @CsvSource({
+            "0, 32",
+            "100, 212",
+            "-40, -40",
+            "37, 98.6",
+            "1000, 1832",
+            "-273.15, -459.67"          // exactly absolute zero is valid
+    })
+    void convertsCelsiusToFahrenheit(double celsius, double expected) {
+        assertEquals(expected, TemperatureConverter.celsiusToFahrenheit(celsius), DELTA);
     }
-    @ParameterizedTest
-    @CsvSource
-            ({
-                    "0,-17.777777",
-                    "100,37.777777",
-                    "-40,-40"
-            })
-    void testFahrenheitToCelsiusScenarios(double input,double expectedOutput) {
-        double actualOutput = temperatureConverter.fahrenheitToCelsius(input);
-        assertEquals(expectedOutput,actualOutput,0.0001);
+
+    @ParameterizedTest(name = "{0} F = {1} C")
+    @CsvSource({
+            "32, 0",
+            "212, 100",
+            "-40, -40",
+            "0, -17.77777777777778",
+            "98.6, 37",
+            "-459.67, -273.15"          // exactly absolute zero is valid
+    })
+    void convertsFahrenheitToCelsius(double fahrenheit, double expected) {
+        assertEquals(expected, TemperatureConverter.fahrenheitToCelsius(fahrenheit), DELTA);
     }
-    @Test
-    void testTemperatureBelowAbsoluteZero() {
-        Exception exception1 = assertThrows(IllegalArgumentException.class, () -> {
-            temperatureConverter.celsiusToFahrenheit(-273.2);
-        });
-        assertEquals("Provided input temperature is below absolute zero.",exception1.getMessage());
-        Exception exception2 = assertThrows(IllegalArgumentException.class, () -> {
-            temperatureConverter.fahrenheitToCelsius(-459.7);
-        });
-        assertEquals("Provided input temperature is below absolute zero.",exception2.getMessage());
+
+    @ParameterizedTest(name = "{0} C is rejected")
+    @ValueSource(doubles = {-273.16, -300, -1e9,
+            Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, Double.NaN})
+    void rejectsInvalidCelsius(double celsius) {
+        assertThrows(IllegalArgumentException.class,
+                () -> TemperatureConverter.celsiusToFahrenheit(celsius));
+    }
+
+    @ParameterizedTest(name = "{0} F is rejected")
+    @ValueSource(doubles = {-459.68, -500, -1e9,
+            Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, Double.NaN})
+    void rejectsInvalidFahrenheit(double fahrenheit) {
+        assertThrows(IllegalArgumentException.class,
+                () -> TemperatureConverter.fahrenheitToCelsius(fahrenheit));
+    }
+
+    @ParameterizedTest(name = "round trip {0} C")
+    @ValueSource(doubles = {-273.15, -40, 0, 36.6, 100, 5000})
+    void roundTripReturnsOriginal(double celsius) {
+        double back = TemperatureConverter.fahrenheitToCelsius(
+                TemperatureConverter.celsiusToFahrenheit(celsius));
+        assertEquals(celsius, back, DELTA);
     }
 }
