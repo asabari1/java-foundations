@@ -3,16 +3,16 @@ package io.github.asabari1.foundations;
 public class Palindrome {
     boolean isPalindrome(String inputString) {
         if (inputString == null) throw new IllegalArgumentException("Input string cannot be null.");
-        for(int left=0,right=inputString.length()-1;left<right;left++,right--){
+        for(int left=0,right=inputString.codePointCount(0,inputString.length())-1;left<right;left++,right--){
             //ignore non-alphanumeric characters at both ends
-            while(!(Character.isLetterOrDigit(inputString.charAt(left))) && left<right) {
+            while(!(Character.isLetterOrDigit(inputString.codePointAt(left))) && left<right) {
                 left++;
             }
-            while(!(Character.isLetterOrDigit(inputString.charAt(right))) && left<right) {
+            while(!(Character.isLetterOrDigit(inputString.codePointAt(right))) && left<right) {
                 right--;
             }
             //compare both ends ignoring case, return false if not equals
-            if (Character.toLowerCase(inputString.charAt(left))!=Character.toLowerCase(inputString.charAt(right))) {
+            if (Character.toLowerCase(inputString.codePointAt(left))!=Character.toLowerCase(inputString.codePointAt(right))) {
                 return false;
             }
         }
