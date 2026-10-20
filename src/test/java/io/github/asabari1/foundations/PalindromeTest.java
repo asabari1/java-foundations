@@ -18,7 +18,14 @@ public class PalindromeTest {
                     "'a',true",
                     "'',true",
                     "'    ',true",
-                    "'\n',true"
+                    "'\n',true",
+                    "'race a car',false",
+                    "'12321',true",
+                    "'a1b2',false",
+                    "',.!',true",
+                    "'été',true",
+                    "'a\uD83D\uDE00a',true",
+                    "'\uD835\uDC9Cb\uD835\uDC9E',false"
             })
     void testMultiplePalindromeScenarios(String inputString,boolean expectedResult) {
         boolean actualResult = palindrome.isPalindrome(inputString);
