@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PalindromeTest {
     private final Palindrome palindrome = new Palindrome();
-    @ParameterizedTest(name = "[{index}] {0}")
+    @ParameterizedTest(name = "n={0}")
     @CsvSource
             ({
                     "'A man, a plan, a canal: Panama',true",

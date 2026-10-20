@@ -1,7 +1,21 @@
 package io.github.asabari1.foundations;
+/**
+ * A utility to check if a reads the same in both directions
+ */
 
 public class Palindrome {
-    boolean isPalindrome(String inputString) {
+
+    /**
+     * Returns true if the letters and digits of the text read the same forwards
+     * and backwards, ignoring case and every other character. A text with no
+     * letters or digits is a palindrome.
+     *
+     * @param inputString the text to check
+     * @return true if the text is a palindrome under the rules above
+     * @throws IllegalArgumentException if {@code inputString} is null
+     */
+
+    public boolean isPalindrome(String inputString) {
         if (inputString == null) throw new IllegalArgumentException("Input string cannot be null.");
         int left=0;
         int right=inputString.length();
