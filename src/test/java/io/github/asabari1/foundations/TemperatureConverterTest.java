@@ -1,5 +1,6 @@
 package io.github.asabari1.foundations;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -30,6 +31,7 @@ public class TemperatureConverterTest {
         double actualOutput = temperatureConverter.fahrenheitToCelsius(input);
         assertEquals(expectedOutput,actualOutput,0.0001);
     }
+    @Test
     void testTemperatureBelowAbsoluteZero() {
         Exception exception1 = assertThrows(IllegalArgumentException.class, () -> {
             temperatureConverter.celsiusToFahrenheit(-273.2);
